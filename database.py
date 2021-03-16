@@ -1,0 +1,44 @@
+import sqlalchemy as sa
+from core import *
+import os
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+
+engine = create_engine("sqlite:///new.db")
+Session = sessionmaker(bind=engine)
+session = Session()
+
+if not os._exists("new.db"):
+    Base.metadata.create_all(engine)
+
+"""
+python -i database.py
+
+# Criando objetos Aluno
+a1 = Aluno(nome="João", telefone=41984203944, quarto=60)
+a2 = Aluno(nome="Igor", quarto=74)
+
+# Criando objetos Livro
+b1 = Livro(academico=True, letra="F", indice=1, titulo="Foo", dono=a1) # Quem é o dono do livro? O Aluno a1
+b2 = Livro(academico=True, letra="B", indice=1, titulo="Bar", dono=a1)
+b3 = Livro(academico=True, letra="F", indice=2, titulo="FooBarr", dono=a2)
+
+session.add_all([a1, a2, b1, b2, b3])
+# session.rollback() Cancela tudo até o último commit
+session.commit() # Realiza as operações. Aqui, os dados já estão no banco de dados
+
+alunos = session.query(Aluno)
+print(alunos[0])
+livros_a1 = alunos[0].livros # Objetos da classe Livro! São os objetos mesmo, como definidos em core.py
+print(livros_a1[0].titulo)
+
+b_foo = session.query(Livro).filter(Livro.titulo == "Foo").all() # O método filter exige que façamos um "fetch"
+print(b_foo[0].dono) # Dono do livro foo
+print(b_foo[0].dono.livros[0].dono.livros[0].dono)
+
+
+
+
+"""
