@@ -10,7 +10,10 @@ engine = create_engine("sqlite:///new.db")
 Session = sessionmaker(bind=engine)
 session = Session()
 
-if not os._exists("new.db"):
+if __name__ == "__main__":
+
+    if os.path.exists("new.db"):
+        os.remove("new.db") 
     Base.metadata.create_all(engine)
 
 """
@@ -19,6 +22,7 @@ python -i database.py
 # Criando objetos Aluno
 a1 = Aluno(nome="João", telefone=41984203944, quarto=60)
 a2 = Aluno(nome="Igor", quarto=74)
+a3 = Aluno(nome="Biblioteca", quarto=0)
 
 # Criando objetos Livro
 b1 = Livro(academico=True, letra="F", indice=1, titulo="Foo", dono=a1) # Quem é o dono do livro? O Aluno a1
