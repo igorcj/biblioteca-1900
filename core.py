@@ -83,11 +83,11 @@ class Emprestimo(Base):
     # Relações
     dono = relationship("Aluno", foreign_keys=[locatario_ID])
     locatario = relationship("Aluno", foreign_keys=[locador_ID])
-    livro = relationship("Livro", foreign_keys=[livro_academico, livro_letra, livro_indice])
+    livro = relationship("Livro", foreign_keys=[
+                         livro_academico, livro_letra, livro_indice])
 
     __table_args__ = (ForeignKeyConstraint([livro_academico, livro_letra, livro_indice],
                                            [Livro.academico, Livro.letra, Livro.indice]), {})
-    
 
     def __repr__(self):
         return f"Emprestimo(dono={self.dono.nome}, locatario={self.locatario.nome}, livro={self.livro.titulo})"

@@ -1,7 +1,8 @@
 import sqlalchemy as sa
-from core import *
 import os
+import utils
 
+from core import Livro, Aluno, Emprestimo, Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -13,7 +14,7 @@ session = Session()
 if __name__ == "__main__":
 
     if os.path.exists("new.db"):
-        os.remove("new.db") 
+        os.remove("new.db")
     Base.metadata.create_all(engine)
 
 """
