@@ -42,7 +42,7 @@ def find_next_ID(session=None, academico: bool = None, letra: str = None) -> int
 
 def find_sucessor(IDs: list) -> int:
     """
-    Retorna o menor número cujo sucessor não está na lista
+    Retorna o sucessor do menor número cujo sucessor não está na lista
     """
 
     IDs.sort()
