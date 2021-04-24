@@ -77,7 +77,7 @@ class Emprestimo(Base):
     livro_indice = Column(Integer)
 
     # Dados
-    data_emp = Column(Date, nullable=True)
+    data_emp = Column(Date, nullable=False)
     data_dev = Column(Date, nullable=True)
 
     # Relações
