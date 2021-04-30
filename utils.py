@@ -114,7 +114,6 @@ def fazer_emprestimo(session=None, st_code: str = None, bk_code: str = None):
         raise ValueError("session, matrícula ou código do livro inválido(s)")
 
     categoria, letra, indice = bk_code.split("-")
-    letra = letra.upper()
     categoria, indice = int(categoria), int(indice)
 
     livro = session.query(Livro).filter_by(
@@ -127,11 +126,8 @@ def fazer_emprestimo(session=None, st_code: str = None, bk_code: str = None):
     if locatario is None:
         raise ValueError("Locatário não encontrado")
 
-    dono = livro.dono
-    emprestimo = Emprestimo(dono=dono, locatario=locatario,
-                            livro=livro, data_emp=datetime.datetime.today())
+    emprestimo = Emprestimo(locatario=locatario, livro=livro,
+                            data_emp=datetime.datetime.today())
 
     session.add(emprestimo)
     session.commit()
-
-    return True

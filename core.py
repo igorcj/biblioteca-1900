@@ -70,7 +70,6 @@ class Emprestimo(Base):
 
     # Alunos
     locatario_ID = Column(Integer, ForeignKey("aluno.ID"))
-    locador_ID = Column(Integer, ForeignKey("aluno.ID"))
 
     # Livro
     livro_categoria = Column(Integer)
@@ -82,8 +81,7 @@ class Emprestimo(Base):
     data_dev = Column(Date, nullable=True)
 
     # Relações
-    dono = relationship("Aluno", foreign_keys=[locatario_ID])
-    locatario = relationship("Aluno", foreign_keys=[locador_ID])
+    locatario = relationship("Aluno", foreign_keys=[locatario_ID])
     livro = relationship("Livro", foreign_keys=[
                          livro_categoria, livro_letra, livro_indice])
 
@@ -91,4 +89,32 @@ class Emprestimo(Base):
                                            [Livro.categoria, Livro.letra, Livro.indice]), {})
 
     def __repr__(self):
-        return f"Emprestimo(dono={self.dono.nome}, locatario={self.locatario.nome}, livro={self.livro.titulo})"
+        return f"Emprestimo(locatario={self.locatario.nome}, livro={self.livro.titulo})"
+
+
+class Reserva(Base):
+
+    __tablename__ = "reserva"
+
+    ID = Column(Integer, primary_key=True)
+
+    # Aluno
+    aluno_ID = Column(Integer, ForeignKey("aluno.ID"))
+
+    # Livro
+    livro_categoria = Column(Integer)
+    livro_letra = Column(String(1))
+    livro_indice = Column(Integer)
+
+    # Data
+    data = Column(Date, nullable=False)
+
+    aluno = relationship("Aluno")
+    livro = relationship("Livro", foreign_keys=[
+                         livro_categoria, livro_letra, livro_indice])
+
+    __table_args__ = (ForeignKeyConstraint([livro_categoria, livro_letra, livro_indice],
+                                           [Livro.categoria, Livro.letra, Livro.indice]), {})
+
+    def __repr__(self):
+        return f"Reserva(aluno={self.aluno.nome}, livro={self.livro.titulo}, data={self.data.strftime('%d/%m/%Y')})"
