@@ -22,7 +22,7 @@ class Livro(Base):
     __tablename__ = "livro"
 
     # ID
-    academico = Column(Boolean, primary_key=True)
+    categoria = Column(Integer, primary_key=True)
     letra = Column(String(1), primary_key=True)
     indice = Column(Integer, primary_key=True)
 
@@ -51,6 +51,7 @@ class Aluno(Base):
 
     # Dados
     nome = Column(String(50), nullable=False)
+    matricula = Column(String(6), nullable=False)
     telefone = Column(String(11), nullable=True)
     quarto = Column(Integer, nullable=False)
 
@@ -72,7 +73,7 @@ class Emprestimo(Base):
     locador_ID = Column(Integer, ForeignKey("aluno.ID"))
 
     # Livro
-    livro_academico = Column(Boolean)
+    livro_categoria = Column(Integer)
     livro_letra = Column(String(1))
     livro_indice = Column(Integer)
 
@@ -84,10 +85,10 @@ class Emprestimo(Base):
     dono = relationship("Aluno", foreign_keys=[locatario_ID])
     locatario = relationship("Aluno", foreign_keys=[locador_ID])
     livro = relationship("Livro", foreign_keys=[
-                         livro_academico, livro_letra, livro_indice])
+                         livro_categoria, livro_letra, livro_indice])
 
-    __table_args__ = (ForeignKeyConstraint([livro_academico, livro_letra, livro_indice],
-                                           [Livro.academico, Livro.letra, Livro.indice]), {})
+    __table_args__ = (ForeignKeyConstraint([livro_categoria, livro_letra, livro_indice],
+                                           [Livro.categoria, Livro.letra, Livro.indice]), {})
 
     def __repr__(self):
         return f"Emprestimo(dono={self.dono.nome}, locatario={self.locatario.nome}, livro={self.livro.titulo})"

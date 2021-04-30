@@ -21,14 +21,14 @@ if __name__ == "__main__":
 python -i database.py
 
 # Criando objetos Aluno
-a1 = Aluno(nome="João", telefone=41984203944, quarto=60)
-a2 = Aluno(nome="Igor", quarto=74)
-a3 = Aluno(nome="Biblioteca", quarto=0)
+a1 = Aluno(nome="João", telefone=41984203944, quarto=60, matricula="B41309")
+a2 = Aluno(nome="Igor", quarto=74, matricula="B39000")
+a3 = Aluno(nome="Biblioteca", quarto=0, matricula="B00000")
 
 # Criando objetos Livro
-b1 = Livro(academico=True, letra="F", indice=1, titulo="Foo", dono=a1) # Quem é o dono do livro? O Aluno a1
-b2 = Livro(academico=True, letra="B", indice=1, titulo="Bar", dono=a1)
-b3 = Livro(academico=True, letra="F", indice=2, titulo="FooBarr", dono=a2)
+b1 = Livro(categoria=0, letra="F", indice=1, titulo="Foo", dono=a1) # Quem é o dono do livro? O Aluno a1
+b2 = Livro(categoria=0, letra="B", indice=1, titulo="Bar", dono=a1)
+b3 = Livro(categoria=0, letra="F", indice=2, titulo="FooBarr", dono=a2)
 
 session.add_all([a1, a2, b1, b2, b3])
 # session.rollback() Cancela tudo até o último commit

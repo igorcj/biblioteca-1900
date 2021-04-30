@@ -22,7 +22,7 @@ def test_livro_errado():
         assert u.verify_bk_code(codigo) == False
 
 
-def test_livro_errado():
+def test_livro_certo():
     codigos = ["1-F-1", "3-H-7"]
     for codigo in codigos:
         assert u.verify_bk_code(codigo) == True
