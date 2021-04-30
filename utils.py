@@ -118,7 +118,7 @@ def fazer_emprestimo(session=None, st_code: str = None, bk_code: str = None):
     categoria, indice = int(categoria), int(indice)
 
     livro = session.query(Livro).filter_by(
-        categoria=categoria, letra=letra, indice=indice)
+        categoria=categoria, letra=letra, indice=indice).first()
     locatario = session.query(Aluno).filter_by(matricula=st_code).first()
 
     if livro is None:
