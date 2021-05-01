@@ -12,6 +12,13 @@ engine = create_engine("sqlite:///new.db")
 Session = sessionmaker(bind=engine)
 session = Session()
 
+
+def create_all():
+    if os.path.exists("new.db"):
+        os.remove("new.db")
+    Base.metadata.create_all(engine)
+
+
 """
 python -i database.py
 
@@ -38,18 +45,16 @@ print(b_foo[0].dono.livros[0].dono.livros[0].dono)
 """
 if __name__ == "__main__":
 
-    if os.path.exists("new.db"):
-        os.remove("new.db")
-    Base.metadata.create_all(engine)
+    create_all()
 
-    a1 = Aluno(nome="João", telefone=41984203944,
-               quarto=60, matricula="B41309")
-    a2 = Aluno(nome="Igor", quarto=74, matricula="B39000")
-    a3 = Aluno(nome="Biblioteca", quarto=0, matricula="B00000")
+    a1 = Aluno(nome="João", telefone="41984203944",
+               quarto="60", matricula="B41309")
+    a2 = Aluno(nome="Igor", quarto="74", matricula="B39000")
+    a3 = Aluno(nome="Biblioteca", quarto="01", matricula="B00000")
 
-    b1 = Livro(categoria=0, letra="F", indice=1, titulo="Foo", dono=a1)
-    b2 = Livro(categoria=0, letra="B", indice=1, titulo="Bar", dono=a1)
-    b3 = Livro(categoria=0, letra="F", indice=2, titulo="FooBarr", dono=a3)
+    b1 = Livro(ID="0-F-01", titulo="Foo", dono=a1)
+    b2 = Livro(ID="0-B-01", titulo="Bar", dono=a1)
+    b3 = Livro(ID="0-F-02", titulo="FooBarr", dono=a3)
 
     session.add_all([a1, a2, b1, b2, b3])
     session.commit()

@@ -7,7 +7,8 @@ from sqlalchemy import (
     Date,
     Column,
     ForeignKey,
-    ForeignKeyConstraint
+    ForeignKeyConstraint,
+    CheckConstraint
 )
 from sqlalchemy.orm import (
     relationship,
@@ -22,9 +23,7 @@ class Livro(Base):
     __tablename__ = "livro"
 
     # ID
-    categoria = Column(Integer, primary_key=True)
-    letra = Column(String(1), primary_key=True)
-    indice = Column(Integer, primary_key=True)
+    ID = Column(String(6), primary_key=True)
 
     # Dados
     titulo = Column(String(40))
@@ -33,6 +32,14 @@ class Livro(Base):
     ano = Column(Integer, nullable=True)
     autor = Column(String(50), nullable=True)
     disponivel = Column(Boolean, default=True)
+
+    # Checks
+    __table_args__ = (
+        CheckConstraint(
+            r"ID REGEXP('^\w-\w-\d\d$')", name="check_ID"),
+        CheckConstraint(
+            r"SUBSTR(ID,3,1) = SUBSTR(titulo,1,1)", name="check_titulo"),
+    )
 
     # Relações
     aluno_ID = Column(Integer, ForeignKey("aluno.ID"))
@@ -53,10 +60,20 @@ class Aluno(Base):
     nome = Column(String(50), nullable=False)
     matricula = Column(String(6), nullable=False)
     telefone = Column(String(11), nullable=True)
-    quarto = Column(Integer, nullable=False)
+    quarto = Column(String(2), nullable=False)
 
     # Relações
     livros = relationship(Livro, back_populates="dono", cascade="all, delete")
+
+    # Checks
+    __table_args__ = \
+        (CheckConstraint(
+            r"matricula REGEXP('^\W(\d){5}$')", name="check_matricula"),
+         CheckConstraint(
+            r"quarto REGEXP('^(\d){2}$')", name="check_quarto"),
+         CheckConstraint(
+            r"telefone REGEXP('^\d{11}$')", name="check_telefone"),
+         )
 
     def __repr__(self):
         return f"Aluno(nome={self.nome}, quarto={self.nome}, telefone={self.telefone})"
@@ -72,9 +89,7 @@ class Emprestimo(Base):
     locatario_ID = Column(Integer, ForeignKey("aluno.ID"))
 
     # Livro
-    livro_categoria = Column(Integer)
-    livro_letra = Column(String(1))
-    livro_indice = Column(Integer)
+    livro_ID = Column(String(6), ForeignKey("livro.ID"))
 
     # Dados
     data_emp = Column(Date, nullable=False)
@@ -82,11 +97,7 @@ class Emprestimo(Base):
 
     # Relações
     locatario = relationship("Aluno", foreign_keys=[locatario_ID])
-    livro = relationship("Livro", foreign_keys=[
-                         livro_categoria, livro_letra, livro_indice])
-
-    __table_args__ = (ForeignKeyConstraint([livro_categoria, livro_letra, livro_indice],
-                                           [Livro.categoria, Livro.letra, Livro.indice]), {})
+    livro = relationship("Livro")
 
     def __repr__(self):
         return f"Emprestimo(locatario={self.locatario.nome}, livro={self.livro.titulo})"
@@ -102,19 +113,13 @@ class Reserva(Base):
     aluno_ID = Column(Integer, ForeignKey("aluno.ID"))
 
     # Livro
-    livro_categoria = Column(Integer)
-    livro_letra = Column(String(1))
-    livro_indice = Column(Integer)
+    livro_ID = Column(String(6), ForeignKey("livro.ID"))
 
     # Data
     data = Column(Date, nullable=False)
 
     aluno = relationship("Aluno")
-    livro = relationship("Livro", foreign_keys=[
-                         livro_categoria, livro_letra, livro_indice])
-
-    __table_args__ = (ForeignKeyConstraint([livro_categoria, livro_letra, livro_indice],
-                                           [Livro.categoria, Livro.letra, Livro.indice]), {})
+    livro = relationship("Livro")
 
     def __repr__(self):
         return f"Reserva(aluno={self.aluno.nome}, livro={self.livro.titulo}, data={self.data.strftime('%d/%m/%Y')})"

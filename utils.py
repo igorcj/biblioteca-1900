@@ -8,7 +8,7 @@ class IDError(Exception):
     pass
 
 
-def find_next_ID(session=None, academico: bool = None, letra: str = None) -> int:
+def find_next_ID(session=None, categoria: int = None, letra: str = None) -> int:
     """
     Retorna o menor inteiro disponível para ser usado como índice no ID de um livro
 
@@ -25,19 +25,19 @@ def find_next_ID(session=None, academico: bool = None, letra: str = None) -> int
     int
     """
 
-    if not all([isinstance(academico, bool), isinstance(letra, str), session is not None]):
+    if not all([isinstance(categoria, int), isinstance(letra, str), session is not None]):
         raise TypeError("Tipo das variáveis errados")
 
     letra = letra.upper()
 
     IDs = []
 
-    livros = session.query(Livro)\
-        .filter_by(academico=academico, letra=letra)\
-        .all()
+    livros = session.query(Livro).all()
 
     for livro in livros:
-        IDs.append(livro.indice)
+        ID = livro.ID
+        if ID[0] == categoria and ID[2] == letra:
+            IDs.append(ID)
 
     return find_successor(IDs)
 
@@ -113,11 +113,7 @@ def fazer_emprestimo(session=None, st_code: str = None, bk_code: str = None):
     if not (verify_bk_code(bk_code) and verify_st_code(st_code)):
         raise ValueError("session, matrícula ou código do livro inválido(s)")
 
-    categoria, letra, indice = bk_code.split("-")
-    categoria, indice = int(categoria), int(indice)
-
-    livro = session.query(Livro).filter_by(
-        categoria=categoria, letra=letra, indice=indice).first()
+    livro = session.query(Livro).filter_by(ID=bk_code).first()
     locatario = session.query(Aluno).filter_by(matricula=st_code).first()
 
     if livro is None:
