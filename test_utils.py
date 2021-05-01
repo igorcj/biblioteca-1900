@@ -38,17 +38,11 @@ def test_basic_inserts():
         db.session.add_all([b1, b2, b3, b4])
         db.session.commit()
 
-        e1 = core.Emprestimo(locatario=a1, livro=b3,
-                             data_emp=dt.datetime.today())
-        r1 = core.Reserva(aluno=a2, livro=b3, data=dt.datetime.today())
-        session.add_all([e1, r1])
-        session.commit()
-
     except (sa.exc.IntegrityError):
         assert False
 
 
-def test_insets():
+def test_inserts():
 
     a1 = session.query(core.Aluno).first()
 
@@ -80,12 +74,27 @@ def test_insets():
 
     session.rollback()
 
-    utils.fazer_emprestimo(session=session, st_code="B41309", bk_code="0-F-02")
+
+def test_emprestimos():
+
+    utils.emprestimo(session=session, st_code="B41309", bk_code="0-F-02")
+
+    disp = session.query(core.Livro).filter_by(
+        ID="0-F-02").first().disponivel
+
+    assert disp == False
 
     with pytest.raises(ValueError):
-        utils.fazer_emprestimo(
+        utils.emprestimo(
             session=session, st_code="b41309", bk_code="0-F-03")
 
     with pytest.raises(ValueError):
-        utils.fazer_emprestimo(
+        utils.emprestimo(
             session=session, st_code="B41309", bk_code="0-F-03")
+
+    utils.devolucao(session=session, bk_code="0-F-02")
+
+    disp = session.query(core.Livro).filter_by(
+        ID="0-F-02").first().disponivel
+
+    assert disp == True

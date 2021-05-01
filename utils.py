@@ -63,7 +63,7 @@ def find_successor(IDs: list) -> int:
     return IDs[-1] + 1
 
 
-def fazer_emprestimo(session=None, st_code: str = None, bk_code: str = None):
+def emprestimo(session=None, st_code: str = None, bk_code: str = None):
     """
     Faz um empréstimo
 
@@ -88,5 +88,19 @@ def fazer_emprestimo(session=None, st_code: str = None, bk_code: str = None):
     emprestimo = Emprestimo(locatario=locatario, livro=livro,
                             data_emp=datetime.datetime.today())
 
+    livro.disponivel = False
+
     session.add(emprestimo)
     session.commit()
+
+
+def devolucao(session=None, bk_code: str = None):
+
+    emprestimo = session.query(Emprestimo).join(
+        Livro, Emprestimo.livro).filter(Livro.ID == bk_code).first()
+
+    if emprestimo is None:
+        raise ValueError("Emprestimo não encontrado")
+
+    emprestimo.data_dev = datetime.datetime.today()
+    emprestimo.livro.disponivel = True
