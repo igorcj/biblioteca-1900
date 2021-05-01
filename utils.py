@@ -63,40 +63,6 @@ def find_successor(IDs: list) -> int:
     return IDs[-1] + 1
 
 
-def verify_st_code(st_code: str) -> bool:
-
-    try:
-        assert len(st_code) == 6
-        _ = int(st_code[1:])
-        cond = st_code[0] == 'B'
-        assert cond == True
-
-    except (ValueError, TypeError, AssertionError):
-        return False
-
-    return True
-
-
-def verify_bk_code(bk_code: str) -> bool:
-
-    try:
-        assert len(bk_code.split("-")) == 3
-
-        categoria, letra, indice = bk_code.split("-")
-        categoria, indice = int(categoria), int(indice)
-
-        assert indice != 0
-
-        cond = all([isinstance(categoria, int),
-                   letra in ascii_uppercase, isinstance(indice, int)])
-        assert cond == True
-
-    except (AssertionError, TypeError, ValueError):
-        return False
-
-    return True
-
-
 def fazer_emprestimo(session=None, st_code: str = None, bk_code: str = None):
     """
     Faz um empréstimo
@@ -109,9 +75,6 @@ def fazer_emprestimo(session=None, st_code: str = None, bk_code: str = None):
     bk_code : string
         string do ID do livro no formato C-L-00    
     """
-
-    if not (verify_bk_code(bk_code) and verify_st_code(st_code)):
-        raise ValueError("session, matrícula ou código do livro inválido(s)")
 
     livro = session.query(Livro).filter_by(ID=bk_code).first()
     locatario = session.query(Aluno).filter_by(matricula=st_code).first()

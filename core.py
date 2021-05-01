@@ -68,7 +68,7 @@ class Aluno(Base):
     # Checks
     __table_args__ = \
         (CheckConstraint(
-            r"matricula REGEXP('^\W(\d){5}$')", name="check_matricula"),
+            r"matricula REGEXP('^B(\d){5}$')", name="check_matricula"),
          CheckConstraint(
             r"quarto REGEXP('^(\d){2}$')", name="check_quarto"),
          CheckConstraint(
