@@ -47,7 +47,7 @@ class Livro(Base):
     dono = relationship("Aluno", back_populates="livros")
 
     def __repr__(self):
-        return f"Livro(titulo={self.titulo})"
+        return f"Livro(titulo=\"{self.titulo}\")"
 
 
 class Aluno(Base):
@@ -77,7 +77,7 @@ class Aluno(Base):
          )
 
     def __repr__(self):
-        return f"Aluno(nome={self.nome}, quarto={self.nome}, telefone={self.telefone})"
+        return f"Aluno(nome=\"{self.nome}\", quarto={self.nome}, telefone=\"{self.telefone}\")"
 
 
 class Emprestimo(Base):
@@ -101,7 +101,7 @@ class Emprestimo(Base):
     livro = relationship("Livro")
 
     def __repr__(self):
-        return f"Emprestimo(locatario={self.locatario.nome}, livro={self.livro.titulo})"
+        return f"Emprestimo(locatario=\"{self.locatario.nome}\", livro=\"{self.livro.titulo}\")"
 
 
 class Reserva(Base):
@@ -123,4 +123,4 @@ class Reserva(Base):
     livro = relationship("Livro")
 
     def __repr__(self):
-        return f"Reserva(aluno={self.aluno.nome}, livro={self.livro.titulo}, data={self.data.strftime('%d/%m/%Y')})"
+        return f"Reserva(aluno=\"{self.aluno.nome}\", livro=\"{self.livro.titulo}\", data={self.data.strftime('%d/%m/%Y')})"
