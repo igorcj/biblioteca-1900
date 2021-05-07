@@ -1,5 +1,6 @@
 import inspect
 import datetime
+import sqlalchemy as sa
 from core import Livro, Aluno, Emprestimo, Reserva
 from string import ascii_uppercase
 from sqlalchemy.sql.expression import func
@@ -9,7 +10,7 @@ class IDError(Exception):
     pass
 
 
-def find_next_ID(session=None, categoria: int = None, letra: str = None) -> int:
+def find_next_ID(session, categoria: int, letra: str) -> int:
     """
     Retorna o menor inteiro disponível para ser usado como índice no ID de um livro
 
@@ -24,19 +25,14 @@ def find_next_ID(session=None, categoria: int = None, letra: str = None) -> int:
     int
     """
 
-    if not all([isinstance(categoria, int), isinstance(letra, str), session is not None]):
-        raise TypeError("Tipo das variáveis errados")
-
     letra = letra.upper()
-
     IDs = []
-
     livros = session.query(Livro).all()
 
     for livro in livros:
         ID = livro.ID
-        if ID[0] == categoria and ID[2] == letra:
-            IDs.append(ID)
+        if int(ID[0]) == categoria and ID[2] == letra:
+            IDs.append(int(ID[4:]))
 
     return find_successor(IDs)
 
@@ -62,7 +58,7 @@ def find_successor(IDs: list) -> int:
     return IDs[-1] + 1
 
 
-def emprestimo(session, st_code: str, bk_code: str):
+def add_emprestimo(session, st_code: str, bk_code: str):
     """
     Faz um empréstimo
 
@@ -103,11 +99,11 @@ def devolucao(session, bk_code: str):
     if emprestimo is None:
         raise ValueError("Emprestimo não encontrado")
 
-    emprestimo.data_dev = datetime.datetime.today()
+    emprestimo.data_dev = datetime.datetime.now()
     emprestimo.livro.disponivel = True
 
 
-def checar_reserva(session, bk_code: str):
+def check_reserva(session, bk_code: str):
     """
     Checa se há reserva pelo livro. Se tiver, retorna a reserva, senão, retorna None
     """
@@ -119,3 +115,34 @@ def checar_reserva(session, bk_code: str):
     reserva = session.query(Reserva, func.min(
         Reserva.data)).filter_by(livro_ID=bk_code).first()
     return reserva[0]
+
+
+def add_aluno(session, **kwargs):
+    kwargs["nome"] = kwargs["nome"].lower()
+
+    exists = session.query(Aluno).filter(
+        sa.or_(Aluno.nome == kwargs["nome"], Aluno.matricula == kwargs["matricula"])).first()
+
+    if exists:
+        raise ValueError("Aluno já cadastrado")
+
+    aluno = Aluno(**kwargs)
+    session.add(aluno)
+    session.commit()
+
+
+def add_livro(session, categoria: int, titulo: str, dono, **kwargs):
+
+    titulo = titulo.title()
+    exists = session.query(Livro).filter(Livro.titulo == titulo).first()
+
+    if exists:
+        raise ValueError("Livro já cadastrado")
+
+    letra = titulo[0]
+    num_ID = find_next_ID(session, categoria=categoria, letra=letra)
+    ID = f"{categoria}-{letra}-{num_ID:02}"
+
+    livro = Livro(ID=ID, titulo=titulo, **kwargs)
+    session.add(livro)
+    session.commit()

@@ -74,10 +74,17 @@ def test_inserts():
 
     session.rollback()
 
+    with pytest.raises(sa.exc.IntegrityError):
+        b6 = core.Livro(ID="A-Z-01", titulo="Parr", dono=a1)
+        session.add(b6)
+        session.commit()
+
+    session.rollback()
+
 
 def test_emprestimos():
 
-    utils.emprestimo(session=session, st_code="B41309", bk_code="0-F-02")
+    utils.add_emprestimo(session=session, st_code="B41309", bk_code="0-F-02")
 
     test_bk = session.query(core.Livro).filter_by(
         ID="0-F-02").first()
@@ -86,11 +93,11 @@ def test_emprestimos():
     assert disp == False
 
     with pytest.raises(ValueError):
-        utils.emprestimo(
+        utils.add_emprestimo(
             session=session, st_code="b41309", bk_code="0-F-02")
 
     with pytest.raises(ValueError):
-        utils.emprestimo(
+        utils.add_emprestimo(
             session=session, st_code="B41309", bk_code="0-F-03")
 
     utils.devolucao(session=session, bk_code="0-F-02")
@@ -117,14 +124,42 @@ def test_reservas():
     session.add_all([r1, r2, r3])
     session.commit()
 
-    reserva = utils.checar_reserva(session, b2.ID)
+    reserva = utils.check_reserva(session, b2.ID)
     assert reserva == r2
 
-    reserva = utils.checar_reserva(session, b1.ID)
+    reserva = utils.check_reserva(session, b1.ID)
     assert reserva == r1
 
-    reserva = utils.checar_reserva(session, b3.ID)
+    reserva = utils.check_reserva(session, b3.ID)
     assert reserva == None
 
     with pytest.raises(ValueError):
-        reserva = utils.checar_reserva(session, "0-Z-01")
+        reserva = utils.check_reserva(session, "0-Z-01")
+
+
+def test_add_aluno():
+
+    utils.add_aluno(session, nome="Welly", matricula="B41300", quarto="66")
+    utils.add_aluno(session, nome="Ana", matricula="B41360",
+                    quarto="20", telefone="39766554433")
+
+    with pytest.raises(ValueError):
+        utils.add_aluno(session, nome="Welly", matricula="B41300", quarto="66")
+
+    with pytest.raises(ValueError):
+        utils.add_aluno(session, nome="Welly", matricula="B41300",
+                        quarto="66", telefone="41984304955")
+
+
+def test_add_livo():
+    a1 = session.query(core.Aluno).first()
+
+    utils.add_livro(session, categoria=0, titulo="Fantasias do Mar", dono=a1)
+    l1 = session.query(core.Livro).filter_by(titulo="Fantasias do Mar").first()
+    assert l1 is not None
+
+    with pytest.raises(ValueError):
+        utils.add_livro(session, categoria=0,
+                        titulo="Fantasias do Mar", dono=a1)
+
+    utils.add_livro(session, categoria=1, titulo="Fantoches do ar", dono=a1)
