@@ -112,6 +112,10 @@ def checar_reserva(session, bk_code: str):
     Checa se há reserva pelo livro. Se tiver, retorna a reserva, senão, retorna None
     """
 
+    bk = session.query(Livro).filter_by(ID=bk_code).first()
+    if bk is None:
+        raise ValueError("Livro não encontrado")
+
     reserva = session.query(Reserva, func.min(
         Reserva.data)).filter_by(livro_ID=bk_code).first()
     return reserva[0]

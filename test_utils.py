@@ -79,14 +79,15 @@ def test_emprestimos():
 
     utils.emprestimo(session=session, st_code="B41309", bk_code="0-F-02")
 
-    disp = session.query(core.Livro).filter_by(
-        ID="0-F-02").first().disponivel
+    test_bk = session.query(core.Livro).filter_by(
+        ID="0-F-02").first()
+    disp = test_bk.disponivel
 
     assert disp == False
 
     with pytest.raises(ValueError):
         utils.emprestimo(
-            session=session, st_code="b41309", bk_code="0-F-03")
+            session=session, st_code="b41309", bk_code="0-F-02")
 
     with pytest.raises(ValueError):
         utils.emprestimo(
@@ -94,8 +95,7 @@ def test_emprestimos():
 
     utils.devolucao(session=session, bk_code="0-F-02")
 
-    disp = session.query(core.Livro).filter_by(
-        ID="0-F-02").first().disponivel
+    disp = test_bk.disponivel
 
     assert disp == True
 
@@ -108,6 +108,7 @@ def test_reservas():
     bs = session.query(core.Livro).all()
     b1 = bs[0]
     b2 = bs[1]
+    b3 = bs[2]
 
     r1 = core.Reserva(aluno=a1, livro=b1)
     r2 = core.Reserva(aluno=a2, livro=b2)
@@ -118,3 +119,12 @@ def test_reservas():
 
     reserva = utils.checar_reserva(session, b2.ID)
     assert reserva == r2
+
+    reserva = utils.checar_reserva(session, b1.ID)
+    assert reserva == r1
+
+    reserva = utils.checar_reserva(session, b3.ID)
+    assert reserva == None
+
+    with pytest.raises(ValueError):
+        reserva = utils.checar_reserva(session, "0-Z-01")
