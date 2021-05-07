@@ -151,7 +151,7 @@ def test_add_aluno():
                         quarto="66", telefone="41984304955")
 
 
-def test_add_livo():
+def test_add_livro():
     a1 = session.query(core.Aluno).first()
 
     utils.add_livro(session, categoria=0, titulo="Fantasias do Mar", dono=a1)
