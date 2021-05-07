@@ -98,3 +98,23 @@ def test_emprestimos():
         ID="0-F-02").first().disponivel
 
     assert disp == True
+
+
+def test_reservas():
+
+    a = session.query(core.Aluno).all()
+    a1 = a[0]
+    a2 = a[1]
+    bs = session.query(core.Livro).all()
+    b1 = bs[0]
+    b2 = bs[1]
+
+    r1 = core.Reserva(aluno=a1, livro=b1)
+    r2 = core.Reserva(aluno=a2, livro=b2)
+    r3 = core.Reserva(aluno=a1, livro=b2)
+
+    session.add_all([r1, r2, r3])
+    session.commit()
+
+    reserva = utils.checar_reserva(session, b2.ID)
+    assert reserva == r2
