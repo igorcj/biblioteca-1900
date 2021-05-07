@@ -37,7 +37,7 @@ class Livro(Base):
     # Checks
     __table_args__ = (
         CheckConstraint(
-            r"ID REGEXP('^\w-\w-\d\d$')", name="check_ID"),
+            r"ID REGEXP('^\d-\w-\d\d$')", name="check_ID"),
         CheckConstraint(
             r"SUBSTR(ID,3,1) = SUBSTR(titulo,1,1)", name="check_titulo"),
     )
