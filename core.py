@@ -1,10 +1,11 @@
 import os
+import datetime
 
 from sqlalchemy import (
     Integer,
     String,
     Boolean,
-    Date,
+    DateTime,
     Column,
     ForeignKey,
     ForeignKeyConstraint,
@@ -92,8 +93,8 @@ class Emprestimo(Base):
     livro_ID = Column(String(6), ForeignKey("livro.ID"))
 
     # Dados
-    data_emp = Column(Date, nullable=False)
-    data_dev = Column(Date, nullable=True)
+    data_emp = Column(DateTime, default=datetime.datetime.now)
+    data_dev = Column(DateTime, nullable=True)
 
     # Relações
     locatario = relationship("Aluno", foreign_keys=[locatario_ID])
@@ -116,7 +117,7 @@ class Reserva(Base):
     livro_ID = Column(String(6), ForeignKey("livro.ID"))
 
     # Data
-    data = Column(Date, nullable=False)
+    data = Column(DateTime, default=datetime.datetime.now)
 
     aluno = relationship("Aluno")
     livro = relationship("Livro")
