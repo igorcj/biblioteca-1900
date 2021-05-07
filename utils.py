@@ -73,6 +73,10 @@ def add_emprestimo(session, st_code: str, bk_code: str):
 
     livro = session.query(Livro).filter_by(ID=bk_code).first()
     locatario = session.query(Aluno).filter_by(matricula=st_code).first()
+    reservado = check_reserva(session, bk_code)
+
+    if reservado:
+        raise ValueError("Livro reservado")
 
     if livro is None:
         raise ValueError("Livro não encontrado")
