@@ -1,7 +1,8 @@
 import inspect
 import datetime
-from core import Livro, Aluno, Emprestimo
+from core import Livro, Aluno, Emprestimo, Reserva
 from string import ascii_uppercase
+from sqlalchemy.sql.expression import func
 
 
 class IDError(Exception):
@@ -15,9 +16,7 @@ def find_next_ID(session=None, categoria: int = None, letra: str = None) -> int:
     Parametros
     ----------
     academico : string
-
     letra : string
-
     session : sqlalchemy session
 
     Retorna
@@ -63,7 +62,7 @@ def find_successor(IDs: list) -> int:
     return IDs[-1] + 1
 
 
-def emprestimo(session=None, st_code: str = None, bk_code: str = None):
+def emprestimo(session, st_code: str, bk_code: str):
     """
     Faz um empréstimo
 
@@ -73,7 +72,7 @@ def emprestimo(session=None, st_code: str = None, bk_code: str = None):
         string no formato "B00000"
 
     bk_code : string
-        string do ID do livro no formato C-L-00    
+        string do ID do livro no formato "C-L-00"    
     """
 
     livro = session.query(Livro).filter_by(ID=bk_code).first()
@@ -85,8 +84,7 @@ def emprestimo(session=None, st_code: str = None, bk_code: str = None):
     if locatario is None:
         raise ValueError("Locatário não encontrado")
 
-    emprestimo = Emprestimo(locatario=locatario, livro=livro,
-                            data_emp=datetime.datetime.today())
+    emprestimo = Emprestimo(locatario=locatario, livro=livro)
 
     livro.disponivel = False
 
@@ -94,7 +92,10 @@ def emprestimo(session=None, st_code: str = None, bk_code: str = None):
     session.commit()
 
 
-def devolucao(session=None, bk_code: str = None):
+def devolucao(session, bk_code: str):
+    """
+    Faz a devoluçao do livro
+    """
 
     emprestimo = session.query(Emprestimo).join(
         Livro, Emprestimo.livro).filter(Livro.ID == bk_code).first()
@@ -104,3 +105,13 @@ def devolucao(session=None, bk_code: str = None):
 
     emprestimo.data_dev = datetime.datetime.today()
     emprestimo.livro.disponivel = True
+
+
+def checar_reserva(session, bk_code: str):
+    """
+    Checa se há reserva pelo livro. Se tiver, retorna a reserva, senão, retorna None
+    """
+
+    reserva = session.query(Reserva, func.min(
+        Reserva.data)).filter_by(livro_ID=bk_code).first()
+    return reserva[0]
