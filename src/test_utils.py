@@ -154,8 +154,8 @@ def test_add_aluno():
 def test_add_livro():
     a1 = session.query(core.Aluno).first()
 
-    utils.add_livro(session, categoria=0, titulo="Fantasias do Mar", dono=a1)
-    l1 = session.query(core.Livro).filter_by(titulo="Fantasias do Mar").first()
+    utils.add_livro(session, categoria=0, titulo="Fantasias Do Mar", dono=a1)
+    l1 = session.query(core.Livro).filter_by(titulo="Fantasias Do Mar").first()
     assert l1 is not None
 
     with pytest.raises(ValueError):
