@@ -78,10 +78,10 @@ def test_add_aluno():
 
 
 def test_add_livro():
-    a1 = session.query(core.Aluno).filter_by(nome="welly").first()
-    a2 = session.query(core.Aluno).filter_by(nome="igor").first()
-    a3 = session.query(core.Aluno).filter_by(nome="joão").first()
-    a4 = session.query(core.Aluno).filter_by(nome="biblioteca").first()
+    a1 = session.query(core.Aluno).filter_by(nome="Welly").first()
+    a2 = session.query(core.Aluno).filter_by(nome="Igor").first()
+    a3 = session.query(core.Aluno).filter_by(nome="João").first()
+    a4 = session.query(core.Aluno).filter_by(nome="Biblioteca").first()
 
     utils.add_livro(
         session,
@@ -182,7 +182,7 @@ def test_find_livro():
     livros = utils.find_livro(session, autor="Adam", editora="PUC")
     assert len(livros) == 1
 
-    a1 = session.query(core.Aluno).filter_by(nome="welly").first()
+    a1 = session.query(core.Aluno).filter_by(nome="Welly").first()
     assert a1 is not None
     assert a1.ID == 1
 
@@ -222,29 +222,19 @@ def test_emprestimos():
 
 def test_reservas():
 
-    a = session.query(core.Aluno).all()
-    a1 = a[0]
-    a2 = a[1]
-    bs = session.query(core.Livro).all()
-    b1 = bs[0]
-    b2 = bs[1]
-    b3 = bs[2]
+    a1, a2, a3, *_ = session.query(core.Aluno).all()
+    b1, b2, b3, *_ = session.query(core.Livro).all()
 
-    r1 = core.Reserva(aluno=a1, livro=b1)
-    r2 = core.Reserva(aluno=a2, livro=b2)
-    r3 = core.Reserva(aluno=a1, livro=b2)
+    utils.add_reserva(session, a1.matricula, b1.ID)
+    utils.add_reserva(session, a2.matricula, b2.ID)
 
-    session.add_all([r1, r2, r3])
-    session.commit()
-
-    reserva = utils.check_reserva(session, b2.ID)
-    assert reserva == r2
-
-    reserva = utils.check_reserva(session, b1.ID)
-    assert reserva == r1
+    r1 = utils.check_reserva(session, b1.ID)
+    r2 = utils.check_reserva(session, b2.ID)
+    assert r1 is not None
+    assert r2 is not None
 
     reserva = utils.check_reserva(session, b3.ID)
-    assert reserva == None
+    assert reserva is None
 
     with pytest.raises(ValueError):
         reserva = utils.check_reserva(session, "0-Z-01")

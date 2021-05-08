@@ -96,37 +96,8 @@ def add_emprestimo(session, st_code: str, bk_code: str):
     session.commit()
 
 
-def devolucao(session, bk_code: str):
-    """
-    Faz a devoluçao do livro
-    """
-
-    emprestimo = session.query(Emprestimo).join(
-        Livro, Emprestimo.livro).filter(Livro.ID == bk_code).first()
-
-    if emprestimo is None:
-        raise ValueError("Emprestimo não encontrado")
-
-    emprestimo.data_dev = datetime.datetime.now()
-    emprestimo.livro.disponivel = True
-
-
-def check_reserva(session, bk_code: str):
-    """
-    Checa se há reserva pelo livro. Se tiver, retorna a reserva, senão, retorna None
-    """
-
-    bk = session.query(Livro).filter_by(ID=bk_code).first()
-    if bk is None:
-        raise ValueError("Livro não encontrado")
-
-    reserva = session.query(Reserva, func.min(
-        Reserva.data)).filter_by(livro_ID=bk_code).first()
-    return reserva[0]
-
-
 def add_aluno(session, **kwargs):
-    kwargs["nome"] = kwargs["nome"].lower()
+    kwargs["nome"] = kwargs["nome"].title()
 
     exists = session.query(Aluno).filter(
         sa.or_(Aluno.nome == kwargs["nome"], Aluno.matricula == kwargs["matricula"])).first()
@@ -157,6 +128,62 @@ def add_livro(session, categoria: int, titulo: str, dono, **kwargs):
     session.commit()
 
 
-def find_livro(session, **kwargs):
+def add_reserva(session, st_code, bk_code):
+    aluno = session.query(Aluno).filter_by(matricula=st_code).all()
+    assert len(aluno) == 1
+
+    livro = session.query(Livro).filter_by(ID=bk_code).all()
+    assert len(livro) == 1
+
+    reserva = Reserva(aluno=aluno[0], livro=livro[0])
+    session.add(reserva)
+    session.commit()
+
+
+def find_livro(session, **kwargs) -> list:
     livros = session.query(Livro).filter_by(**kwargs).all()
     return livros
+
+
+def find_aluno(session, **kwargs) -> list:
+    alunos = session.query(Aluno).filter_by(**kwargs).all()
+    return alunos
+
+
+def find_emprestimo(session, **kwargs) -> list:
+    emprestimos = session.query(Emprestimo).filter_by(**kwargs).all()
+    return emprestimos
+
+
+def find_reserva(session, **kwargs) -> list:
+    reservas = session.query(Reserva).filter_by(**kwargs).all()
+    return reservas
+
+
+def devolucao(session, bk_code: str):
+    """
+    Faz a devoluçao do livro
+    """
+
+    emprestimo = session.query(Emprestimo).join(
+        Livro, Emprestimo.livro).filter(Livro.ID == bk_code).first()
+
+    if emprestimo is None:
+        raise ValueError("Emprestimo não encontrado")
+
+    emprestimo.data_dev = datetime.datetime.now()
+    emprestimo.livro.disponivel = True
+
+
+def check_reserva(session, bk_code: str) -> Reserva:
+    """
+    Checa se há reserva pelo livro. Se tiver, retorna a reserva, senão, retorna None
+    """
+
+    bk = session.query(Livro).filter_by(ID=bk_code).first()
+    if bk is None:
+        raise ValueError("Livro não encontrado")
+
+    reserva = session.query(Reserva, func.min(
+        Reserva.data)).filter_by(livro_ID=bk_code).first()
+    return reserva[0]
