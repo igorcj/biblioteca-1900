@@ -43,11 +43,21 @@ class Livro(Base):
     )
 
     # Relações
-    aluno_ID = Column(Integer, ForeignKey("aluno.ID"))
+    aluno_ID = Column(Integer, ForeignKey("aluno.ID"), nullable=False)
     dono = relationship("Aluno", back_populates="livros")
 
     def __repr__(self):
         return f"Livro(titulo=\"{self.titulo}\")"
+
+    def __eq__(self, other):
+
+        return all(
+            self.titulo == other.titulo,
+            self.editora == other.editora,
+            self.edicao == other.edicao,
+            self.ano == other.ano,
+            self.autor == other.autor,
+        )
 
 
 class Aluno(Base):
@@ -77,7 +87,7 @@ class Aluno(Base):
          )
 
     def __repr__(self):
-        return f"Aluno(nome=\"{self.nome}\", quarto={self.nome}, telefone=\"{self.telefone}\")"
+        return f"Aluno(nome=\"{self.nome}\", quarto={self.quarto}, telefone=\"{self.telefone}\")"
 
 
 class Emprestimo(Base):
