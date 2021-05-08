@@ -138,7 +138,8 @@ def add_aluno(session, **kwargs):
 def add_livro(session, categoria: int, titulo: str, dono, **kwargs):
 
     titulo = titulo.title()
-    exists = session.query(Livro).filter(Livro.titulo == titulo).first()
+    exists = session.query(Livro).filter_by(titulo=titulo, **kwargs).all()
+    exists = [l for l in exists if int(l.ID[0]) == categoria]
 
     if exists:
         raise ValueError("Livro já cadastrado")
@@ -147,6 +148,11 @@ def add_livro(session, categoria: int, titulo: str, dono, **kwargs):
     num_ID = find_next_ID(session, categoria=categoria, letra=letra)
     ID = f"{categoria}-{letra}-{num_ID:02}"
 
-    livro = Livro(ID=ID, titulo=titulo, **kwargs)
+    livro = Livro(ID=ID, titulo=titulo, dono=dono, **kwargs)
     session.add(livro)
     session.commit()
+
+
+def find_livro(session, **kwargs):
+    livros = session.query(Livro).filter_by(**kwargs).all()
+    return livros

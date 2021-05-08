@@ -6,6 +6,8 @@ from database import session
 import sqlalchemy as sa
 import datetime as dt
 
+db.create_all()
+
 
 def test_find_successor():
     IDs = [1, 1, 2, 3, 4]
@@ -20,71 +22,178 @@ def test_find_successor():
     assert utils.find_successor(IDs) == 3
 
 
-def test_basic_inserts():
-    db.create_all()
+def test_add_aluno():
 
-    try:
-        a1 = core.Aluno(nome="João", telefone="41984203944",
-                        quarto="60", matricula="B41309")
-        a2 = core.Aluno(nome="Igor", quarto="74", matricula="B39000")
-        a3 = core.Aluno(nome="Biblioteca", quarto="01", matricula="B00000")
-        db.session.add_all([a1])
-        db.session.commit()
+    utils.add_aluno(
+        session,
+        nome="Welly",
+        matricula="B41300",
+        quarto="66"
+    )
+    utils.add_aluno(
+        session,
+        nome="Ana",
+        matricula="B41360",
+        quarto="20",
+        telefone="39766554433"
+    )
+    utils.add_aluno(
+        session,
+        nome="João",
+        matricula="B41309",
+        quarto="60",
+        telefone="41984203944"
+    )
+    utils.add_aluno(
+        session,
+        nome="Igor",
+        matricula="B40308",
+        quarto="79"
+    )
+    utils.add_aluno(
+        session,
+        nome="Biblioteca",
+        matricula="B00000",
+        quarto="00"
+    )
 
-        b1 = core.Livro(ID="0-F-01", titulo="Foo", dono=a1)
-        b2 = core.Livro(ID="0-B-01", titulo="Bar", dono=a1)
-        b3 = core.Livro(ID="0-F-02", titulo="FooBarr", dono=a3)
-        b4 = core.Livro(ID="0-B-02", titulo="Barr", dono=a2)
-        db.session.add_all([b1, b2, b3, b4])
-        db.session.commit()
+    with pytest.raises(ValueError):
+        utils.add_aluno(session, nome="Welly", matricula="B41300", quarto="66")
 
-    except (sa.exc.IntegrityError):
-        assert False
-
-
-def test_inserts():
-
-    a1 = session.query(core.Aluno).first()
+    with pytest.raises(ValueError):
+        utils.add_aluno(session, nome="Welly", matricula="B41300",
+                        quarto="66", telefone="41984304955")
 
     with pytest.raises(sa.exc.IntegrityError):
-        a4 = core.Aluno(nome="Ana", quarto="1974", matricula="B39000")
-        session.add(a4)
-        session.commit()
+        utils.add_aluno(session, nome="Ronaldo",
+                        quarto="1940", matricula="B20394")
 
     session.rollback()
 
     with pytest.raises(sa.exc.IntegrityError):
-        a5 = core.Aluno(nome="Vitor", quarto="05", matricula="b39000")
-        session.add(a5)
-        session.commit()
+        utils.add_aluno(session, nome="Ronaldo", quarto="40",
+                        matricula="B20394", telefone="984399450")
 
     session.rollback()
 
-    with pytest.raises(sa.exc.IntegrityError):
-        b5 = core.Livro(ID="0-A-02", titulo="Parr", dono=a1)
-        session.add(b5)
-        session.commit()
 
-    session.rollback()
+def test_add_livro():
+    a1 = session.query(core.Aluno).filter_by(nome="welly").first()
+    a2 = session.query(core.Aluno).filter_by(nome="igor").first()
+    a3 = session.query(core.Aluno).filter_by(nome="joão").first()
+    a4 = session.query(core.Aluno).filter_by(nome="biblioteca").first()
 
-    with pytest.raises(sa.exc.IntegrityError):
-        b6 = core.Livro(ID="0 A-1", titulo="Parr", dono=a1)
-        session.add(b6)
-        session.commit()
+    utils.add_livro(
+        session,
+        categoria=0,
+        titulo="Fantasias Do Mar",
+        dono=a1,
+        editora="FGV",
+        autor="Adam",
+        ano=2010
+    )
+    utils.add_livro(
+        session,
+        categoria=1,
+        titulo="Fantasias Do Mar",
+        dono=a1,
+        editora="FGV",
+        autor="Adam",
+        ano=2010
+    )
+    utils.add_livro(
+        session,
+        categoria=0,
+        titulo="Fantasias Do Mar",
+        dono=a2,
+        ano=2015
+    )
+    utils.add_livro(
+        session,
+        categoria=1,
+        titulo="Aventuras",
+        dono=a1,
+        autor="Adam",
+        editora="PUC",
+        ano=2010
+    )
+    utils.add_livro(
+        session,
+        categoria=0,
+        titulo="Aleluia",
+        dono=a2,
+        autor="Renato",
+        editora="PUC",
+        ano=1950
+    )
+    utils.add_livro(
+        session,
+        categoria=1,
+        titulo="Fantasias Do Mar",
+        dono=a4,
+        autor="Maria Maria",
+        ano=1964
+    )
+    utils.add_livro(
+        session,
+        categoria=1,
+        titulo="Fantoches do ar",
+        dono=a1
+    )
+    utils.add_livro(
+        session,
+        categoria=0,
+        titulo="matemática para leigos",
+        dono=a3,
+        autor="Descartes"
+    )
+    utils.add_livro(
+        session,
+        categoria=0,
+        titulo="matemática para pessoas fodas",
+        dono=a4,
+        autor="Descartes"
+    )
 
-    session.rollback()
+    l1 = session.query(core.Livro).filter_by(titulo="Fantasias Do Mar").first()
+    assert l1 is not None
 
-    with pytest.raises(sa.exc.IntegrityError):
-        b6 = core.Livro(ID="A-Z-01", titulo="Parr", dono=a1)
-        session.add(b6)
-        session.commit()
+    with pytest.raises(ValueError):
+        utils.add_livro(
+            session,
+            categoria=0,
+            titulo="Fantasias do Mar",
+            dono=a1,
+            editora="FGV",
+            autor="Adam",
+            ano=2010
+        )
 
-    session.rollback()
+
+def test_find_livro():
+
+    l1 = session.query(core.Livro).filter_by(titulo="Fantasias Do Mar").all()
+    livros = utils.find_livro(session, titulo="Fantasias Do Mar")
+    assert livros == l1
+
+    livros = utils.find_livro(session, autor="Adam")
+    assert len(livros) == 3
+
+    livros = utils.find_livro(session, autor="Adam", editora="PUC")
+    assert len(livros) == 1
+
+    a1 = session.query(core.Aluno).filter_by(nome="welly").first()
+    assert a1 is not None
+    assert a1.ID == 1
+
+    livros = utils.find_livro(session, aluno_ID=a1.ID)
+    assert len(livros) == 4
 
 
 def test_emprestimos():
 
     utils.add_emprestimo(session=session, st_code="B41309", bk_code="0-F-02")
+    # utils.add_emprestimo(session=session)
 
     test_bk = session.query(core.Livro).filter_by(
         ID="0-F-02").first()
@@ -135,31 +244,3 @@ def test_reservas():
 
     with pytest.raises(ValueError):
         reserva = utils.check_reserva(session, "0-Z-01")
-
-
-def test_add_aluno():
-
-    utils.add_aluno(session, nome="Welly", matricula="B41300", quarto="66")
-    utils.add_aluno(session, nome="Ana", matricula="B41360",
-                    quarto="20", telefone="39766554433")
-
-    with pytest.raises(ValueError):
-        utils.add_aluno(session, nome="Welly", matricula="B41300", quarto="66")
-
-    with pytest.raises(ValueError):
-        utils.add_aluno(session, nome="Welly", matricula="B41300",
-                        quarto="66", telefone="41984304955")
-
-
-def test_add_livro():
-    a1 = session.query(core.Aluno).first()
-
-    utils.add_livro(session, categoria=0, titulo="Fantasias Do Mar", dono=a1)
-    l1 = session.query(core.Livro).filter_by(titulo="Fantasias Do Mar").first()
-    assert l1 is not None
-
-    with pytest.raises(ValueError):
-        utils.add_livro(session, categoria=0,
-                        titulo="Fantasias do Mar", dono=a1)
-
-    utils.add_livro(session, categoria=1, titulo="Fantoches do ar", dono=a1)
