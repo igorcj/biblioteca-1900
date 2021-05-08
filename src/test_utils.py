@@ -192,14 +192,14 @@ def test_find_livro():
 
 def test_emprestimos():
 
-    utils.add_emprestimo(session=session, st_code="B41309", bk_code="0-F-02")
-    # utils.add_emprestimo(session=session)
+    b1, b2, *_ = session.query(core.Livro).all()
+    a1, a2, *_ = session.query(core.Aluno).all()
 
-    test_bk = session.query(core.Livro).filter_by(
-        ID="0-F-02").first()
-    disp = test_bk.disponivel
+    utils.add_emprestimo(session=session, st_code=a1.matricula, bk_code=b1.ID)
+    utils.add_emprestimo(session=session, st_code=a2.matricula, bk_code=b2.ID)
 
-    assert disp == False
+    assert b1.disponivel == False
+    assert b2.disponivel == False
 
     with pytest.raises(ValueError):
         utils.add_emprestimo(
@@ -209,11 +209,15 @@ def test_emprestimos():
         utils.add_emprestimo(
             session=session, st_code="B41309", bk_code="0-F-03")
 
-    utils.devolucao(session=session, bk_code="0-F-02")
+    with pytest.raises(ValueError):
+        utils.add_emprestimo(
+            session=session, st_code=a1.matricula, bk_code=b1.ID)
 
-    disp = test_bk.disponivel
+    utils.devolucao(session=session, bk_code=b1.ID)
+    utils.devolucao(session=session, bk_code=b2.ID)
 
-    assert disp == True
+    assert b1.disponivel == True
+    assert b2.disponivel == True
 
 
 def test_reservas():
