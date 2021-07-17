@@ -17,5 +17,5 @@ end = '''
 main_page = '''
 <h1>Biblioteca 1900</h1>
 <h2>Escolha a operação:</h2>
-<button type="button" onclick="window.location.href='3.138.126.146/pesquisa.py';">Pesquisa</button>
+<button type="button" onclick="window.location.href='pesquisa.py';">Pesquisa</button>
 '''
