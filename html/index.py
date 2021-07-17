@@ -23,3 +23,23 @@ print(masks.end)
 # with Session() as session:
 
 
+
+
+# Turn on debug mode.
+import cgi
+# import cgitb
+# from moldes import *
+cgitb.enable()
+
+
+
+form = cgi.FieldStorage()
+action = form.getvalue('action')
+if action != None:
+    print(action)
+#     if action.startswith('consulta'): consulta(c,action[9]=='a',action[11]=='d')
+
+
+# else:
+#     with open('index.html', 'r') as f:
+#         print(f.read())
