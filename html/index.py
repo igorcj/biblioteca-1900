@@ -6,6 +6,7 @@ sys.path.append('/var/www/src')
 
 import utils
 import masks
+import core
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -23,4 +24,7 @@ print(masks.end)
 
 # print(searchterm)
 
-# with Session() as session:
+with Session() as session:
+    livros = utils.find(session, core.Livro)
+
+print(livros)
