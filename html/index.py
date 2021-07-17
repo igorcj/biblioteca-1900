@@ -30,6 +30,8 @@ with Session() as session:
     livros = utils.find(session, core.Livro)
 
     for l in livros:
-        print(masks.home_table_item.format(**[getattr(l, a, '') for a in livros_attrs]))
+        print(masks.home_table_item.format(
+            *['' if getattr(l, a, '') == 'None' else getattr(l, a, '')
+              for a in livros_attrs]))
 
 print(masks.home_end)
