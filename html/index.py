@@ -15,9 +15,9 @@ Session = sessionmaker(bind=engine)
 
 print("Content-Type: text/html;charset=UTF-8\n\n")
 
-print(masks.begin)
+print(masks.home_begin)
 print(masks.home_page)
-print(masks.end)
+
 
 # form = cgi.FieldStorage()
 # searchterm =  form.getvalue('action')
@@ -27,4 +27,6 @@ print(masks.end)
 with Session() as session:
     livros = utils.find(session, core.Livro)
 
-print(livros)
+
+
+print(masks.home_end)

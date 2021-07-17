@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-begin = '''
+home_begin = '''
 <html>
 <head>
   <title>Biblioteca 1900</title>
@@ -9,10 +9,22 @@ begin = '''
 <body>
 '''
 
-end = '''
+home_end = '''
+</table>
 </body>
 </html>
 '''
+
+
+
+    # titulo = Column(String(40))
+    # editora = Column(String(30), nullable=True)
+    # edicao = Column(String(20), nullable=True)
+    # ano = Column(Integer, nullable=True)
+    # autor = Column(String(50), nullable=True)
+    # disponivel = Column(Boolean, default=True)
+
+
 
 home_page = '''
 <h1>Biblioteca 1900</h1>
@@ -21,6 +33,17 @@ home_page = '''
 <button type="button" onclick="window.location.href='devolucao.py';">
 Realizar uma devolução</button>
 </div>
+
+<table>
+  <tr>
+    <th>Título</th>
+    <th>Editora</th>
+    <th>Edição</th>
+    <th>Ano</th>
+    <th>Autor</th>
+    <th>Disponível</th>
+    <th>Dono</th>
+  </tr>
 '''
 
 # pesquisa_form = '''
