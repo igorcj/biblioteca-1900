@@ -16,9 +16,11 @@ class IDError(Exception):
 
 
 """
-engine = create_engine("sqlite:///new.db")
+name = "teste.db"
+engine = sa.create_engine("sqlite:///{}".format(name))
 Session = sessionmaker(bind=engine)
 session = Session()
+create_all(engine, name=name, overwrite=True, populate=True)
 """
 
 
@@ -113,10 +115,18 @@ def add_emprestimo(session, bk_code: str = None, st_code: str = None, reserva: R
     livro.disponivel = False
 
     session.add(emprestimo)
+
+    if reserva:
+        session.delete(reserva)
+
     session.commit()
 
 
 def add_aluno(session, **kwargs):
+    """
+    Adiciona aluno à database
+    """
+
     kwargs["nome"] = kwargs["nome"].title()
 
     exists = session.query(Aluno).filter(
@@ -131,6 +141,9 @@ def add_aluno(session, **kwargs):
 
 
 def add_livro(session, categoria: int, titulo: str, dono, **kwargs):
+    """
+    Adiciona livro à database
+    """
 
     titulo = titulo.title()
     exists = session.query(Livro).filter_by(titulo=titulo, **kwargs).all()
@@ -149,6 +162,9 @@ def add_livro(session, categoria: int, titulo: str, dono, **kwargs):
 
 
 def add_reserva(session, st_code, bk_code):
+    """
+    Adiciona reserva à database
+    """
     aluno = session.query(Aluno).filter_by(matricula=st_code).all()
     assert len(aluno) == 1
 
@@ -164,7 +180,13 @@ def find(session, classe, **kwargs) -> list:
     """
     Retorna os objetos da database correspondentes à query
     """
-    objetos = session.query(classe).filter_by(**kwargs).all()
+
+    if len(kwargs) == 0:
+        objetos = session.query(classe).all()
+
+    else:
+        objetos = session.query(classe).filter_by(**kwargs).all()
+
     return objetos
 
 
@@ -232,7 +254,7 @@ def create_all(engine, name="new.db", overwrite=False, populate=False):
         )
         add_aluno(
             session,
-            nome="João",
+            nome="Joao",
             matricula="B41309",
             quarto="60",
             telefone="41984203944"
@@ -256,7 +278,7 @@ def create_all(engine, name="new.db", overwrite=False, populate=False):
 
         a1 = session.query(Aluno).filter_by(nome="Welly").first()
         a2 = session.query(Aluno).filter_by(nome="Igor").first()
-        a3 = session.query(Aluno).filter_by(nome="João").first()
+        a3 = session.query(Aluno).filter_by(nome="Joao").first()
         a4 = session.query(Aluno).filter_by(nome="Biblioteca").first()
 
         add_livro(
@@ -271,7 +293,7 @@ def create_all(engine, name="new.db", overwrite=False, populate=False):
         add_livro(
             session,
             categoria=1,
-            titulo="Fantasias Do Mar",
+            titulo="Aventuras no Vento",
             dono=a1,
             editora="FGV",
             autor="Adam",
@@ -280,7 +302,7 @@ def create_all(engine, name="new.db", overwrite=False, populate=False):
         add_livro(
             session,
             categoria=0,
-            titulo="Fantasias Do Mar",
+            titulo="Perdidos em Sao Paulo",
             dono=a2,
             ano=2015
         )
@@ -305,7 +327,7 @@ def create_all(engine, name="new.db", overwrite=False, populate=False):
         add_livro(
             session,
             categoria=1,
-            titulo="Fantasias Do Mar",
+            titulo="Enfim, ferias",
             dono=a4,
             autor="Maria Maria",
             ano=1964
@@ -313,22 +335,22 @@ def create_all(engine, name="new.db", overwrite=False, populate=False):
         add_livro(
             session,
             categoria=1,
-            titulo="Fantoches do ar",
+            titulo="Somos Apenas Marionetes",
             dono=a1
         )
         add_livro(
             session,
             categoria=0,
-            titulo="matemática para leigos",
+            titulo="Matematica Para Leigos",
             dono=a3,
             autor="Descartes"
         )
         add_livro(
             session,
             categoria=0,
-            titulo="matemática para pessoas fodas",
+            titulo="Atirei o Pau no Cachorro",
             dono=a4,
-            autor="Descartes"
+            autor="Dona Xica"
         )
 
         ###########################
