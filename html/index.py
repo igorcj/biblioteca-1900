@@ -24,12 +24,12 @@ print(masks.home_page)
 
 # print(searchterm)
 
+livros_attrs = ['titulo', 'editora', 'edicao', 'ano', 'autor', 'disponivel', 'dono']
+
 with Session() as session:
     livros = utils.find(session, core.Livro)
 
-
-for l in livros:
-    print(masks.home_table_item.format(l.titulo, l.editora, l.edicao, l.ano,
-                                       l.autor, l.disponivel, l.dono.nome))
+    for l in livros:
+        print(masks.home_table_item.format(**[getattr(l, a, '') for a in livros_attrs]))
 
 print(masks.home_end)

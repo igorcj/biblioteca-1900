@@ -37,13 +37,13 @@ home_end = '''
 
 home_table_item = '''
 <tr>
-    <td>{}/td>
-    <td>{}/td>
-    <td>{}/td>
-    <td>{}/td>
-    <td>{}/td>
-    <td>{}/td>
-    <td>{}/td>
+    <td>{}</td>
+    <td>{}</td>
+    <td>{}</td>
+    <td>{}</td>
+    <td>{}</td>
+    <td>{}</td>
+    <td>{}</td>
 </tr>
 '''
 
