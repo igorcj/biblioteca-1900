@@ -2,6 +2,7 @@
 
 
 begin = '''
+Content-Type: text/html;charset=UTF-8\n\n
 <html>
 <head>
   <title>Biblioteca 1900</title>
