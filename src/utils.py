@@ -70,7 +70,7 @@ def find_successor(IDs: list) -> int:
     return IDs[-1] + 1
 
 
-def add_emprestimo(session, st_code: str, bk_code: str):
+def add_emprestimo(session, bk_code: str = None, st_code: str = None, reserva: Reserva = None):
     """
     Faz um empréstimo
 
@@ -81,23 +81,31 @@ def add_emprestimo(session, st_code: str, bk_code: str):
 
     bk_code : string
         string do ID do livro no formato "C-L-00"    
+
+    reserva : Reserva
+        Objeto Reserva referente ao livro, se houver    
     """
+
+    if reserva is not None:
+
+        st_code = reserva.aluno.matricula
+        bk_code = reserva.livro.ID
 
     livro = session.query(Livro).filter_by(ID=bk_code).first()
     locatario = session.query(Aluno).filter_by(matricula=st_code).first()
-    reservado = check_reserva(session, bk_code)
     emprestado = not livro.disponivel
+    reservado = check_reserva(session, bk_code)
 
     if emprestado:
         raise ValueError("Livro emprestado")
 
-    if reservado:
+    elif reservado != reserva:
         raise ValueError("Livro reservado")
 
-    if livro is None:
+    elif livro is None:
         raise ValueError("Livro não encontrado")
 
-    if locatario is None:
+    elif locatario is None:
         raise ValueError("Locatário não encontrado")
 
     emprestimo = Emprestimo(locatario=locatario, livro=livro)
