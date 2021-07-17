@@ -17,7 +17,7 @@ end = '''
 home_page = '''
 <h1>Biblioteca 1900</h1>
 
-<div style="position: absolute; top: 0; right: 0;">
+<div style="position: absolute; top: 10; right: 10;">
 <button type="button" onclick="window.location.href='devolucao.py';">
 Realizar uma devolução</button>
 </div>
