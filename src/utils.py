@@ -1,13 +1,25 @@
 import inspect
 import datetime
+import os
+
 import sqlalchemy as sa
-from core import Livro, Aluno, Emprestimo, Reserva
-from string import ascii_uppercase
 from sqlalchemy.sql.expression import func
+from sqlalchemy.orm import sessionmaker
+
+from core import Livro, Aluno, Emprestimo, Reserva, Base
+
+from string import ascii_uppercase
 
 
 class IDError(Exception):
     pass
+
+
+"""
+engine = create_engine("sqlite:///new.db")
+Session = sessionmaker(bind=engine)
+session = Session()
+"""
 
 
 def find_next_ID(session, categoria: int, letra: str) -> int:
@@ -140,24 +152,12 @@ def add_reserva(session, st_code, bk_code):
     session.commit()
 
 
-def find_livro(session, **kwargs) -> list:
-    livros = session.query(Livro).filter_by(**kwargs).all()
-    return livros
-
-
-def find_aluno(session, **kwargs) -> list:
-    alunos = session.query(Aluno).filter_by(**kwargs).all()
-    return alunos
-
-
-def find_emprestimo(session, **kwargs) -> list:
-    emprestimos = session.query(Emprestimo).filter_by(**kwargs).all()
-    return emprestimos
-
-
-def find_reserva(session, **kwargs) -> list:
-    reservas = session.query(Reserva).filter_by(**kwargs).all()
-    return reservas
+def find(session, classe, **kwargs) -> list:
+    """
+    Retorna os objetos da database correspondentes à query
+    """
+    objetos = session.query(classe).filter_by(**kwargs).all()
+    return objetos
 
 
 def devolucao(session, bk_code: str):
@@ -187,3 +187,155 @@ def check_reserva(session, bk_code: str) -> Reserva:
     reserva = session.query(Reserva, func.min(
         Reserva.data)).filter_by(livro_ID=bk_code).first()
     return reserva[0]
+
+
+def create_all(engine, name="new.db", overwrite=False, populate=False):
+    """
+    Recria o banco de dados
+    """
+    if os.path.exists(name) and overwrite:
+        print("Removendo banco atual")
+        os.remove(name)
+
+    print("Criando novo banco")
+    Base.metadata.create_all(engine)
+
+    if populate:
+
+        Session = sessionmaker(bind=engine)
+        session = Session()
+
+        ###########################
+        #          ALUNOS         #
+        ###########################
+
+        add_aluno(
+            session,
+            nome="Welly",
+            matricula="B41300",
+            quarto="66"
+        )
+        add_aluno(
+            session,
+            nome="Ana",
+            matricula="B41360",
+            quarto="20",
+            telefone="39766554433"
+        )
+        add_aluno(
+            session,
+            nome="João",
+            matricula="B41309",
+            quarto="60",
+            telefone="41984203944"
+        )
+        add_aluno(
+            session,
+            nome="Igor",
+            matricula="B40308",
+            quarto="79"
+        )
+        add_aluno(
+            session,
+            nome="Biblioteca",
+            matricula="B00000",
+            quarto="00"
+        )
+
+        ###########################
+        #          LIVROS         #
+        ###########################
+
+        a1 = session.query(Aluno).filter_by(nome="Welly").first()
+        a2 = session.query(Aluno).filter_by(nome="Igor").first()
+        a3 = session.query(Aluno).filter_by(nome="João").first()
+        a4 = session.query(Aluno).filter_by(nome="Biblioteca").first()
+
+        add_livro(
+            session,
+            categoria=0,
+            titulo="Fantasias Do Mar",
+            dono=a1,
+            editora="FGV",
+            autor="Adam",
+            ano=2010
+        )
+        add_livro(
+            session,
+            categoria=1,
+            titulo="Fantasias Do Mar",
+            dono=a1,
+            editora="FGV",
+            autor="Adam",
+            ano=2010
+        )
+        add_livro(
+            session,
+            categoria=0,
+            titulo="Fantasias Do Mar",
+            dono=a2,
+            ano=2015
+        )
+        add_livro(
+            session,
+            categoria=1,
+            titulo="Aventuras",
+            dono=a1,
+            autor="Adam",
+            editora="PUC",
+            ano=2010
+        )
+        add_livro(
+            session,
+            categoria=0,
+            titulo="Aleluia",
+            dono=a2,
+            autor="Renato",
+            editora="PUC",
+            ano=1950
+        )
+        add_livro(
+            session,
+            categoria=1,
+            titulo="Fantasias Do Mar",
+            dono=a4,
+            autor="Maria Maria",
+            ano=1964
+        )
+        add_livro(
+            session,
+            categoria=1,
+            titulo="Fantoches do ar",
+            dono=a1
+        )
+        add_livro(
+            session,
+            categoria=0,
+            titulo="matemática para leigos",
+            dono=a3,
+            autor="Descartes"
+        )
+        add_livro(
+            session,
+            categoria=0,
+            titulo="matemática para pessoas fodas",
+            dono=a4,
+            autor="Descartes"
+        )
+
+        ###########################
+        #        EMPRÉSTIMOS      #
+        ###########################
+
+        b1, b2, *_ = session.query(Livro).all()
+        a1, a2, *_ = session.query(Aluno).all()
+
+        add_emprestimo(session=session, st_code=a1.matricula, bk_code=b1.ID)
+        add_emprestimo(session=session, st_code=a2.matricula, bk_code=b2.ID)
+
+        ###########################
+        #         RESERVAS        #
+        ###########################
+
+        add_reserva(session, a1.matricula, b1.ID)
+        add_reserva(session, a2.matricula, b2.ID)
