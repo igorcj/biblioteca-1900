@@ -15,7 +15,12 @@ print("Content-Type: text/html;charset=UTF-8\n\n")
 
 print(masks.begin)
 
-print(masks.main_form)
+print('''
+<form name="search" action="/cgi-bin/test.py" method="get">
+Search: <input type="text" name="searchbox">
+<input type="submit" value="Submit">
+</form> 
+''')
 
 print(masks.end)
 
@@ -24,22 +29,8 @@ print(masks.end)
 
 
 
-
-# Turn on debug mode.
 import cgi
-# import cgitb
-# from moldes import *
-cgitb.enable()
-
-
-
 form = cgi.FieldStorage()
-action = form.getvalue('action')
-if action != None:
-    print(action)
-#     if action.startswith('consulta'): consulta(c,action[9]=='a',action[11]=='d')
+searchterm =  form.getvalue('searchbox')
 
-
-# else:
-#     with open('index.html', 'r') as f:
-#         print(f.read())
+print(searchterm)
