@@ -15,7 +15,7 @@ print("Content-Type: text/html;charset=UTF-8\n\n")
 
 print(masks.begin)
 
-print(masks.main_page)
+print(masks.main_form)
 
 print(masks.end)
 
