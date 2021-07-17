@@ -16,7 +16,7 @@ print("Content-Type: text/html;charset=UTF-8\n\n")
 print(masks.begin)
 
 print('''
-<form name="search" action="/cgi-bin/test.py" method="get">
+<form name="search" action="/index.py" method="get">
 Search: <input type="text" name="searchbox">
 <input type="submit" value="Submit">
 </form> 
