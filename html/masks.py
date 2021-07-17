@@ -13,3 +13,9 @@ end = '''
 </body>
 </html>
 '''
+
+main_page = '''
+<h1>Biblioteca 1900</h1>
+<h2>Escolha a operação:</h2>
+<button type="button" onclick="pesquisa.py">Pesquisa</button>
+'''

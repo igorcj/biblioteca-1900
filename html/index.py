@@ -14,6 +14,9 @@ print("Content-Type: text/html\n\n")
 
 
 print(masks.begin)
+
+print(masks.main_page)
+
 print(masks.end)
 
 
