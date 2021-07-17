@@ -1,8 +1,11 @@
 #!/usr/bin/python3
 
+import sys
+sys.path.append('/var/www/src')
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import src/utils
+import utils
 import masks
 
 engine = create_engine("sqlite:///new.db")
