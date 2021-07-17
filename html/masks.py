@@ -1,15 +1,15 @@
 #!/usr/bin/python3
 
 
-test = '''
-<!DOCTYPE html>
+begin = '''
 <html>
+<head>
+  <title>Biblioteca 1900</title>
+</head>
 <body>
+'''
 
-<h1>The button Element</h1>
-
-<button type="button" onclick="alert('Hello world!')">Click Me!</button>
- 
+end = '''
 </body>
 </html>
 '''
