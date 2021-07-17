@@ -10,6 +10,7 @@ import masks
 
 engine = create_engine("sqlite:///new.db")
 Session = sessionmaker(bind=engine)
+print("Content-Type: text/html;charset=UTF-8\n\n")
 
 
 print(masks.begin)
