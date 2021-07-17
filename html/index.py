@@ -28,5 +28,8 @@ with Session() as session:
     livros = utils.find(session, core.Livro)
 
 
+for l in livros:
+    print(masks.home_table_item.format(l.titulo, l.editora, l.edicao, l.ano,
+                                       l.autor, l.disponivel, l.dono.nome))
 
 print(masks.home_end)

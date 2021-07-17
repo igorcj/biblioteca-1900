@@ -26,20 +26,26 @@ tr:nth-child(even) {
 <body>
 '''
 
+
+
+
 home_end = '''
 </table>
 </body>
 </html>
 '''
 
-
-
-    # titulo = Column(String(40))
-    # editora = Column(String(30), nullable=True)
-    # edicao = Column(String(20), nullable=True)
-    # ano = Column(Integer, nullable=True)
-    # autor = Column(String(50), nullable=True)
-    # disponivel = Column(Boolean, default=True)
+home_table_item = '''
+<tr>
+    <td>{}/td>
+    <td>{}/td>
+    <td>{}/td>
+    <td>{}/td>
+    <td>{}/td>
+    <td>{}/td>
+    <td>{}/td>
+</tr>
+'''
 
 
 
