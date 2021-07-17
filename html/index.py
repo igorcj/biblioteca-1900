@@ -26,6 +26,6 @@ print(masks.end)
 
 import cgi
 form = cgi.FieldStorage()
-searchterm =  form.getvalue('value')
+searchterm =  form.getvalue('action')
 
 print(searchterm)
