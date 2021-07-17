@@ -10,12 +10,27 @@ import masks
 
 engine = create_engine("sqlite:///new.db")
 Session = sessionmaker(bind=engine)
-print("Content-Type: text/html\n\n")
+print("Content-Type: text/html;charset=UTF-8\n\n")
 
 
-print(masks.test)
+print(masks.begin)
+
+print('''
+<form name="search" action="/index.py" method="get">
+Search: <input type="text" name="searchbox">
+<input type="submit" value="Submit">
+</form> 
+''')
+
+print(masks.end)
 
 
 # with Session() as session:
 
 
+
+import cgi
+form = cgi.FieldStorage()
+searchterm =  form.getvalue('searchbox')
+
+print(searchterm)
