@@ -18,4 +18,4 @@ def close_home():
     print(home_end)
 
 def make_modal():
-    print(masks.home_modal)
+    print(home_modal)
