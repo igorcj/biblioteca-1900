@@ -38,6 +38,8 @@ with Session() as session:
 
 print(masks.home_close_table)
 
-print('oioioi')
+modal = form.getvalue('modal')
+
+if modal is not None: print("Abrir modal {}".format(modal))
 
 print(masks.home_end)
