@@ -36,7 +36,7 @@ home_end = '''
 '''
 
 home_table_item = '''
-<tr onclick="test.py" style="cursor: pointer;">
+<tr onclick="window.location.href='test.py';" style="cursor: pointer;">
     <td>{}</td>
     <td>{}</td>
     <td>{}</td>
