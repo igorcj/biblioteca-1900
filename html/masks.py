@@ -117,7 +117,7 @@ Realizar uma devolução</button>
 
 
 home_table_item = '''
-<tr id="myBtn" onclick="window.location.href='index.py?modal={}';modal.style.display='none'" style="cursor: pointer;">
+<tr id="myBtn" onclick="window.location.href='index.py?modal={}';modal.style.display='block'" style="cursor: pointer;">
     <td>{}</td>
     <td>{}</td>
     <td>{}</td>
