@@ -84,6 +84,18 @@ home_close_table = '''</table>'''
 
 
 home_modal = '''
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p>Some text in the Modal..</p>
+  </div>
+
+</div>'''
+
+
+home_modal_config = '''
 <style>
 body {font-family: Arial, Helvetica, sans-serif;}
 
@@ -126,17 +138,6 @@ body {font-family: Arial, Helvetica, sans-serif;}
   cursor: pointer;
 }
 </style>
-
-
-<div id="myModal" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    {}
-  </div>
-
-</div>
 
 <script>
 // Get the modal
