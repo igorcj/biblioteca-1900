@@ -8,3 +8,14 @@ def livros_to_table(livros):
                 l.ano, l.autor, l.disponivel, l.dono.nome]]
         print(home_table_item.format(*atts))
     print(home_close_table)
+
+def open_home():
+    print("Content-Type: text/html;charset=UTF-8\n\n")
+    print(home_begin)
+    print(home_page)
+
+def close_home():
+    print(home_end)
+
+def make_modal():
+    print(masks.home_modal)

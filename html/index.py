@@ -6,21 +6,17 @@ sys.path.append('/var/www/src')
 
 import aux
 import utils
-import masks
 import core
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 engine = create_engine("sqlite:///new.db")
 Session = sessionmaker(bind=engine)
+
 form = cgi.FieldStorage()
 
-print("Content-Type: text/html;charset=UTF-8\n\n")
-
-print(masks.home_begin)
-print(masks.home_page)
-
-
+aux.open_home()
 
 with Session() as session:
     livros = utils.find(session, core.Livro)
@@ -29,7 +25,6 @@ with Session() as session:
     modal = form.getvalue('modal')
 
     if modal is not None:
-        print(masks.home_modal)
+        aux.make_modal()
 
-
-print(masks.home_end)
+aux.close_home()
