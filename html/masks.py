@@ -36,7 +36,7 @@ home_end = '''
 '''
 
 home_table_item = '''
-<tr><a href="http://google.com">
+<tr onclick="test.py" style="cursor: pointer;">
     <td>{}</td>
     <td>{}</td>
     <td>{}</td>
@@ -45,7 +45,7 @@ home_table_item = '''
     <td>{}</td>
     <td>{}</td>
     <td>{}</td>
-</a></tr>
+</tr>
 '''
 
 
