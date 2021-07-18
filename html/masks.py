@@ -36,8 +36,10 @@ home_end = '''
 '''
 
 home_table_item = '''
+<tr class='clickable-row' data-href='test.py'>
+    <td>{}</td>
+</tr>
 <tr>
-    <td class='clickable-row' data-href='test.py'>{}</td>
     <td>{}</td>
     <td>{}</td>
     <td>{}</td>
