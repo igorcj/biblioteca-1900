@@ -25,6 +25,6 @@ with Session() as session:
     modal = form.getvalue('modal')
 
     if modal is not None:
-        aux.make_modal()
+        aux.make_modal(session, modal)
 
 aux.close_home()

@@ -1,4 +1,8 @@
 from masks import *
+import sys
+sys.path.append('/var/www/src')
+import utils
+import core
 
 def livros_to_table(livros):
     print(home_open_table)
@@ -17,5 +21,7 @@ def open_home():
 def close_home():
     print(home_end)
 
-def make_modal():
-    print(home_modal)
+def make_modal(session, modal):
+    d = utils.find(session, core.Livro, ID=modal)[0].disponivel
+    content = 'O livro clicado está {}'.format('disponivel' if d else 'emprestado')
+    print(home_modal.format(content))
