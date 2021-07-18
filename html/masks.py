@@ -37,6 +37,7 @@ home_end = '''
 
 home_table_item = '''
 <tr>
+    <td class='clickable-row' data-href='test.py'>{}</td>
     <td>{}</td>
     <td>{}</td>
     <td>{}</td>
@@ -59,6 +60,7 @@ Realizar uma devolução</button>
 
 <table>
   <tr>
+    <th>Código</th>
     <th>Título</th>
     <th>Editora</th>
     <th>Edição</th>
