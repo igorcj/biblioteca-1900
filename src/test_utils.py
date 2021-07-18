@@ -1,12 +1,15 @@
 import pytest
 import utils
 import core
-import database as db
-from database import session
 import sqlalchemy as sa
 import datetime as dt
+from sqlalchemy.orm import sessionmaker
 
-db.create_all()
+name = "teste.db"
+engine = sa.create_engine("sqlite:///{}".format(name))
+Session = sessionmaker(bind=engine)
+session = Session()
+utils.create_all(engine, name, overwrite=True)
 
 
 def test_find_successor():
@@ -39,7 +42,7 @@ def test_add_aluno():
     )
     utils.add_aluno(
         session,
-        nome="João",
+        nome="Joao",
         matricula="B41309",
         quarto="60",
         telefone="41984203944"
@@ -80,7 +83,7 @@ def test_add_aluno():
 def test_add_livro():
     a1 = session.query(core.Aluno).filter_by(nome="Welly").first()
     a2 = session.query(core.Aluno).filter_by(nome="Igor").first()
-    a3 = session.query(core.Aluno).filter_by(nome="João").first()
+    a3 = session.query(core.Aluno).filter_by(nome="Joao").first()
     a4 = session.query(core.Aluno).filter_by(nome="Biblioteca").first()
 
     utils.add_livro(
@@ -173,20 +176,20 @@ def test_add_livro():
 def test_find_livro():
 
     l1 = session.query(core.Livro).filter_by(titulo="Fantasias Do Mar").all()
-    livros = utils.find_livro(session, titulo="Fantasias Do Mar")
+    livros = utils.find(session, core.Livro, titulo="Fantasias Do Mar")
     assert livros == l1
 
-    livros = utils.find_livro(session, autor="Adam")
+    livros = utils.find(session, core.Livro, autor="Adam")
     assert len(livros) == 3
 
-    livros = utils.find_livro(session, autor="Adam", editora="PUC")
+    livros = utils.find(session, core.Livro, autor="Adam", editora="PUC")
     assert len(livros) == 1
 
     a1 = session.query(core.Aluno).filter_by(nome="Welly").first()
     assert a1 is not None
     assert a1.ID == 1
 
-    livros = utils.find_livro(session, aluno_ID=a1.ID)
+    livros = utils.find(session, core.Livro, aluno_ID=a1.ID)
     assert len(livros) == 4
 
 

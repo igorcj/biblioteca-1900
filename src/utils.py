@@ -94,21 +94,21 @@ def add_emprestimo(session, bk_code: str = None, st_code: str = None, reserva: R
         bk_code = reserva.livro.ID
 
     livro = session.query(Livro).filter_by(ID=bk_code).first()
-    locatario = session.query(Aluno).filter_by(matricula=st_code).first()
-    emprestado = not livro.disponivel
-    reservado = check_reserva(session, bk_code)
+    if livro is None:
+        raise ValueError("Livro não encontrado")
 
+    locatario = session.query(Aluno).filter_by(matricula=st_code).first()
+    if locatario is None:
+        raise ValueError("Locatário não encontrado")
+
+    emprestado = not livro.disponivel
     if emprestado:
         raise ValueError("Livro emprestado")
 
-    elif reservado != reserva:
+    reservado = check_reserva(session, bk_code)
+
+    if reservado != reserva:
         raise ValueError("Livro reservado")
-
-    elif livro is None:
-        raise ValueError("Livro não encontrado")
-
-    elif locatario is None:
-        raise ValueError("Locatário não encontrado")
 
     emprestimo = Emprestimo(locatario=locatario, livro=livro)
 
@@ -369,3 +369,5 @@ def create_all(engine, name="new.db", overwrite=False, populate=False):
 
         add_reserva(session, a1.matricula, b1.ID)
         add_reserva(session, a2.matricula, b2.ID)
+
+        session.close()

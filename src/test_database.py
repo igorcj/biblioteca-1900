@@ -1,12 +1,15 @@
 import pytest
 import utils
 import core
-import database as db
-from database import session
 import sqlalchemy as sa
 import datetime as dt
+from sqlalchemy.orm import sessionmaker
 
-db.create_all()
+name = "teste.db"
+engine = sa.create_engine("sqlite:///{}".format(name))
+Session = sessionmaker(bind=engine)
+session = Session()
+utils.create_all(engine, name, overwrite=True)
 
 
 def test_basic_inserts():
@@ -16,15 +19,15 @@ def test_basic_inserts():
                         quarto="60", matricula="B41309")
         a2 = core.Aluno(nome="Igor", quarto="74", matricula="B39000")
         a3 = core.Aluno(nome="Biblioteca", quarto="01", matricula="B00000")
-        db.session.add_all([a1])
-        db.session.commit()
+        session.add_all([a1])
+        session.commit()
 
         b1 = core.Livro(ID="0-F-01", titulo="Foo", dono=a1)
         b2 = core.Livro(ID="0-B-01", titulo="Bar", dono=a1)
         b3 = core.Livro(ID="0-F-02", titulo="FooBarr", dono=a3)
         b4 = core.Livro(ID="0-B-02", titulo="Barr", dono=a2)
-        db.session.add_all([b1, b2, b3, b4])
-        db.session.commit()
+        session.add_all([b1, b2, b3, b4])
+        session.commit()
 
     except (sa.exc.IntegrityError):
         assert False
