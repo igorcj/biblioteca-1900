@@ -36,6 +36,7 @@ with Session() as session:
 
     searchterm =  form.getvalue('modal')
     if modal != None:
+        print("MODALMODALMODAL")
         print(masks.main_modal)
 
 print(masks.home_end)
