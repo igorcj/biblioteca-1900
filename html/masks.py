@@ -36,10 +36,8 @@ home_end = '''
 '''
 
 home_table_item = '''
-<tr class='clickable-row' data-href='test.py'>
-    <td>{}</td>
-</tr>
 <tr>
+    <a href="http://google.com"> <td>{}</td> </a>
     <td>{}</td>
     <td>{}</td>
     <td>{}</td>
