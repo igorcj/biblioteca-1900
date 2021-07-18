@@ -21,9 +21,88 @@ td, th {
 tr:nth-child(even) {
   background-color: #dddddd;
 }
+</style>
+</head>
+<body>
+'''
+
+
+
+
+home_page = '''
+<h1>Biblioteca 1900</h1>
+
+<div style="position: absolute; top: 10; right: 10;">
+<button type="button" onclick="window.location.href='devolucao.py';">
+Realizar uma devolução</button>
+</div>
+
+<form action="/index.py">
+  <input type="radio" id="consulta-academico" name="action" value="consulta-a-t">
+  <label for="male">Consultar todos os livros acadêmicos</label><br>
+  <input type="radio" id="consulta-literario" name="action" value="consulta-l-t">
+  <label for="male">Consultar todos os livros literários</label><br>
+  <p></p>
+  <input type="radio" id="consulta-academico" name="action" value="consulta-a-d">
+  <label for="male">Consultar livros acadêmicos disponíveis</label><br>
+  <input type="radio" id="consulta-literario" name="action" value="consulta-l-d">
+  <label for="male">Consultar livros literários disponíveis</label><br>
+
+
+  <p></p>
+
+  <input type="submit" value="Pesquisar">
+</form>
+
+<table>
+  <tr>
+    <th>Código</th>
+    <th>Título</th>
+    <th>Editora</th>
+    <th>Edição</th>
+    <th>Ano</th>
+    <th>Autor</th>
+    <th>Disponível</th>
+    <th>Dono</th>
+  </tr>
+'''
+
+
+home_table_item = '''
+<tr id="myBtn" onclick="window.location.href='index.py?modal={}';modal.style.display='block'" style="cursor: pointer;">
+    <td>{}</td>
+    <td>{}</td>
+    <td>{}</td>
+    <td>{}</td>
+    <td>{}</td>
+    <td>{}</td>
+    <td>{}</td>
+    <td>{}</td>
+</tr>
+'''
+
+
+home_end = '''
+</table>
+</body>
+</html>
+'''
+
+main_modal = '''
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p>Some text in the Modal..</p>
+  </div>
+
+</div>
+
+<style>
 /* The Modal (background) */
 .modal {
-  display: none; /* Hidden by default */
+  display: block; /* BLOCK by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
   padding-top: 100px; /* Location of the box */
@@ -60,78 +139,7 @@ tr:nth-child(even) {
   cursor: pointer;
 }
 </style>
-</head>
-<body>
-'''
 
-
-
-
-home_page = '''
-<h1>Biblioteca 1900</h1>
-
-<div style="position: absolute; top: 10; right: 10;">
-<button type="button" onclick="window.location.href='devolucao.py';">
-Realizar uma devolução</button>
-</div>
-
-<form action="/index.py">
-  <input type="radio" id="consulta-academico" name="action" value="consulta-a-t">
-  <label for="male">Consultar todos os livros acadêmicos</label><br>
-  <input type="radio" id="consulta-literario" name="action" value="consulta-l-t">
-  <label for="male">Consultar todos os livros literários</label><br>
-  <p></p>
-  <input type="radio" id="consulta-academico" name="action" value="consulta-a-d">
-  <label for="male">Consultar livros acadêmicos disponíveis</label><br>
-  <input type="radio" id="consulta-literario" name="action" value="consulta-l-d">
-  <label for="male">Consultar livros literários disponíveis</label><br>
-
-
-  <p></p>
-
-  <input type="submit" value="Pesquisar">
-</form>
-
-<div id="myModal" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <p>Some text in the Modal..</p>
-  </div>
-
-</div>
-
-<table>
-  <tr>
-    <th>Código</th>
-    <th>Título</th>
-    <th>Editora</th>
-    <th>Edição</th>
-    <th>Ano</th>
-    <th>Autor</th>
-    <th>Disponível</th>
-    <th>Dono</th>
-  </tr>
-'''
-
-
-home_table_item = '''
-<tr id="myBtn" onclick="window.location.href='index.py?modal={}';modal.style.display='block'" style="cursor: pointer;">
-    <td>{}</td>
-    <td>{}</td>
-    <td>{}</td>
-    <td>{}</td>
-    <td>{}</td>
-    <td>{}</td>
-    <td>{}</td>
-    <td>{}</td>
-</tr>
-'''
-
-
-home_end = '''
-</table>
 
 <script>
 // Get the modal
@@ -160,8 +168,4 @@ window.onclick = function(event) {
   }
 }
 </script>
-
-
-</body>
-</html>
 '''
