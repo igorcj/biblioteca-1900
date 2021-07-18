@@ -53,7 +53,9 @@ Realizar uma devolução</button>
 
   <input type="submit" value="Pesquisar">
 </form>
+'''
 
+home_open_table = '''
 <table>
   <tr>
     <th>Código</th>
@@ -66,7 +68,6 @@ Realizar uma devolução</button>
     <th>Dono</th>
   </tr>
 '''
-
 
 home_table_item = '''
 <tr id="myBtn" onclick="window.location.href='index.py?modal={}';" style="cursor: pointer;">
@@ -81,9 +82,10 @@ home_table_item = '''
 </tr>
 '''
 
+home_close_table = '''</table>'''
+
 
 home_end = '''
-</table>
 </body>
 </html>
 '''

@@ -18,6 +18,7 @@ print("Content-Type: text/html;charset=UTF-8\n\n")
 
 print(masks.home_begin)
 print(masks.home_page)
+print(masks.home_open_table)
 
 
 
@@ -34,5 +35,9 @@ with Session() as session:
             for elem in [l.ID, l.ID, l.titulo, l.editora, l.edicao,
             l.ano, l.autor, l.disponivel, l.dono.nome]]))
 
+
+print(masks.home_close_table)
+
+print('oioioi')
 
 print(masks.home_end)
