@@ -36,8 +36,7 @@ home_end = '''
 '''
 
 home_table_item = '''
-<tr>
-    <td><a href="http://google.com">{}</a></td>
+<tr><a href="http://google.com">
     <td>{}</td>
     <td>{}</td>
     <td>{}</td>
@@ -45,7 +44,8 @@ home_table_item = '''
     <td>{}</td>
     <td>{}</td>
     <td>{}</td>
-</tr>
+    <td>{}</td>
+</a></tr>
 '''
 
 
