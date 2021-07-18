@@ -138,7 +138,9 @@ body {font-family: Arial, Helvetica, sans-serif;}
   cursor: pointer;
 }
 </style>
+'''
 
+modal_actions = '''
 <script>
 // Get the modal
 var modal = document.getElementById("myModal");
@@ -160,7 +162,6 @@ window.onclick = function(event) {
   }
 }
 </script>'''
-
 
 home_end = '''
 </body>

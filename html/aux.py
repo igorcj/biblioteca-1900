@@ -24,6 +24,7 @@ def close_home():
 def make_modal(session, modal):
     print(home_modal_config)
     print(home_modal)
+    print(modal_actions)
     # d = utils.find(session, core.Livro, ID=modal)[0].disponivel
     # content = 'O livro clicado está {}'.format('disponivel' if d else 'emprestado')
     # print(home_modal.format(content))
