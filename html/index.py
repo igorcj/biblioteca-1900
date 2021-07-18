@@ -40,6 +40,9 @@ print(masks.home_close_table)
 
 modal = form.getvalue('modal')
 
-if modal is not None: print("Abrir modal {}".format(modal))
+if modal is not None:
+    print("Abrir modal {}".format(modal))
+    print(masks.home_modal)
+
 
 print(masks.home_end)
