@@ -31,7 +31,7 @@ with Session() as session:
     for l in livros:
         print(masks.home_table_item.format(
             *['-' if elem is None else elem
-            for elem in [l.ID, l.titulo, l.editora, l.edicao,
+            for elem in [l.ID, l.ID, l.titulo, l.editora, l.edicao,
             l.ano, l.autor, l.disponivel, l.dono.nome]]))
 
 print(masks.home_end)

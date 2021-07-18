@@ -74,7 +74,7 @@ home_end = '''
 '''
 
 home_table_item = '''
-<tr onclick="window.location.href='test.py';" style="cursor: pointer;">
+<tr onclick="window.location.href='index.py?modal={}';" style="cursor: pointer;">
     <td>{}</td>
     <td>{}</td>
     <td>{}</td>
