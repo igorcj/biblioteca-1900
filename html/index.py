@@ -34,9 +34,5 @@ with Session() as session:
             for elem in [l.ID, l.ID, l.titulo, l.editora, l.edicao,
             l.ano, l.autor, l.disponivel, l.dono.nome]]))
 
-    searchterm =  form.getvalue('modal')
-    if modal != None:
-        print("MODALMODALMODAL")
-        print(masks.main_modal)
 
 print(masks.home_end)
